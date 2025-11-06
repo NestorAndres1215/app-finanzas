@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: finance-webflux
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/finance_db
+    username: root
+    password: 12345
+  main:
+    web-application-type: reactive
+  thymeleaf:
+    enabled: true
+    cache: false
+
+server:
+  port: 8080
+
+jwt:
+  secret: "estaEsUnaClaveSuperSeguraDe32Caracteres!!"
+  expiration: 86400000
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG

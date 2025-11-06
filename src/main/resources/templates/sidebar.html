@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div th:fragment="sidebar"
+     class="fixed inset-y-0 left-0 w-64 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white shadow-2xl transform transition-all duration-300 ease-in-out z-50 overflow-y-auto">
+        <div class="px-6 py-6 border-b border-purple-700 bg-black bg-opacity-30 backdrop-blur-md">
+            <div class="flex items-center gap-3">
+                <div>
+                    <h3 class="text-xl font-bold tracking-tight">Panel Premium</h3>
+                    <p class="text-xs text-purple-300 opacity-80">Acceso completo</p>
+                </div>
+            </div>
+        </div>
+        <nav class="mt-8 px-4 space-y-1">
+            <ul>
+                <li>
+                    <a href="/dashboard"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:bg-white hover:bg-opacity-10 hover:text-white transition-all duration-200 group backdrop-blur-sm border border-transparent hover:border-purple-500">
+                        <div class="p-2 bg-blue-500 bg-opacity-20 rounded-lg group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-home text-blue-400 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Dashboard</span>
+                        <span class="ml-auto">
+                            <i class="fas fa-chevron-right text-xs text-gray-500 group-hover:text-purple-400"></i>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/registro"
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:bg-white hover:bg-opacity-10 hover:text-white transition-all duration-200 group backdrop-blur-sm border border-transparent hover:border-green-500">
+                        <div class="p-2 bg-green-500 bg-opacity-20 rounded-lg group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-plus-circle text-green-400 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Ingresos</span>
+                        <span class="ml-auto text-xs text-green-400 opacity-70">+24%</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/egresos"
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:bg-white hover:bg-opacity-10 hover:text-white transition-all duration-200 group backdrop-blur-sm border border-transparent hover:border-red-500">
+                        <div class="p-2 bg-red-500 bg-opacity-20 rounded-lg group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-minus-circle text-red-400 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Egresos</span>
+                        <span class="ml-auto text-xs text-red-400 opacity-70">-12%</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>
