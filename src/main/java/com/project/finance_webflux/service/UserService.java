@@ -1,7 +1,6 @@
 package com.project.finance_webflux.service;
 
 
-
 import com.project.finance_webflux.dto.LoginRequest;
 import com.project.finance_webflux.dto.RegisterRequest;
 import com.project.finance_webflux.models.User;
@@ -9,9 +8,12 @@ import com.project.finance_webflux.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+
+import static com.project.finance_webflux.util.Mensaje.USERNAME_NO_ENCONTRADO;
 
 @Service
 @RequiredArgsConstructor
@@ -57,4 +59,29 @@ public class UserService {
                 })
                 .switchIfEmpty(Mono.error(new RuntimeException("Usuario no encontrado")));
     }
+
+    public Flux<User> listarUsuarios() {
+        return userRepository.findAll();
+    }
+
+    public Mono<User> listarPorId(Long id) {
+        return userRepository.findById(id)
+                .switchIfEmpty(Mono.error(new RuntimeException(USERNAME_NO_ENCONTRADO)));
+    }
+
+    public Mono<User> listarPorUsername(String username) {
+        return userRepository.findByUsername(username)
+                .switchIfEmpty(Mono.error(new RuntimeException(USERNAME_NO_ENCONTRADO)));
+    }
+
+    public Mono<User> listarPorEmail(String email) {
+        return userRepository.findByEmail(email)
+                .switchIfEmpty(Mono.error(new RuntimeException(USERNAME_NO_ENCONTRADO)));
+    }
+
+    public Mono<User> listarPorTelefono(String telefono) {
+        return userRepository.findByTelefono(telefono)
+                .switchIfEmpty(Mono.error(new RuntimeException(USERNAME_NO_ENCONTRADO)));
+    }
+
 }
