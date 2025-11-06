@@ -9,28 +9,24 @@ import org.springframework.security.web.server.context.ServerSecurityContextRepo
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtSecurityContextRepository implements ServerSecurityContextRepository {
 
     private final JwtAuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+
 
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
-        return Mono.empty(); // No guardamos el contexto, JWT es stateless
+        return Mono.empty();
     }
 
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
         String token = null;
 
-        // Leer token desde Authorization: Bearer
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);

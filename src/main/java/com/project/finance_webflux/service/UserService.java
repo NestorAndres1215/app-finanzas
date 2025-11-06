@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-import static com.project.finance_webflux.util.Mensaje.USERNAME_NO_ENCONTRADO;
+import static com.project.finance_webflux.util.Mensaje.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +25,10 @@ public class UserService {
     // Registro de usuario
     public Mono<Object> registerUser(RegisterRequest request) {
         return userRepository.findByUsername(request.getUsername())
-                .flatMap(existing -> Mono.error(new RuntimeException("Username ya existe")))
+                .flatMap(existing -> Mono.error(new RuntimeException(USERNAME_EXISTE)))
                 .switchIfEmpty(
                         userRepository.findByEmail(request.getEmail())
-                                .flatMap(existing -> Mono.error(new RuntimeException("Email ya existe")))
+                                .flatMap(existing -> Mono.error(new RuntimeException(EMAIL_EXISTE)))
                 )
                 .switchIfEmpty(
                         Mono.defer(() -> {
@@ -39,7 +39,7 @@ public class UserService {
                                     .telefono(request.getTelefono())
                                     .password(passwordEncoder.encode(request.getPassword()))
                                     .estado(true)
-                                    .rol("USER") // info, no se usará
+                                    .rol(ROL_USER)
                                     .createdAt(LocalDateTime.now())
                                     .build();
                             return userRepository.save(user);
@@ -54,10 +54,10 @@ public class UserService {
                     if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                         return Mono.just(user);
                     } else {
-                        return Mono.error(new RuntimeException("Contraseña incorrecta"));
+                        return Mono.error(new RuntimeException(LOGIN_PASSWORD_INCORRECTO));
                     }
                 })
-                .switchIfEmpty(Mono.error(new RuntimeException("Usuario no encontrado")));
+                .switchIfEmpty(Mono.error(new RuntimeException(LOGIN_USUARIO_NO_ENCONTRADO)));
     }
 
     public Flux<User> listarUsuarios() {

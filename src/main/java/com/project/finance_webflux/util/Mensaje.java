@@ -7,5 +7,9 @@ import lombok.NoArgsConstructor;
 public final class Mensaje {
 
     public static final String USERNAME_NO_ENCONTRADO = "Usuario no encontrado";
-
+    public static final String USERNAME_EXISTE = "Username ya existe";
+    public static final String EMAIL_EXISTE = "Email ya existe";
+    public static final String ROL_USER = "USER";
+    public static final String LOGIN_PASSWORD_INCORRECTO = "Contraseña incorrecta";
+    public static final String LOGIN_USUARIO_NO_ENCONTRADO = "Usuario no encontrado";
 }
