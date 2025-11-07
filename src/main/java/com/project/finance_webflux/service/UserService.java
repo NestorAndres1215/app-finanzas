@@ -3,6 +3,8 @@ package com.project.finance_webflux.service;
 
 import com.project.finance_webflux.dto.LoginRequest;
 import com.project.finance_webflux.dto.RegisterRequest;
+import com.project.finance_webflux.dto.UpdateUserRequest;
+import com.project.finance_webflux.exception.AppException;
 import com.project.finance_webflux.models.User;
 import com.project.finance_webflux.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +27,10 @@ public class UserService {
     // Registro de usuario
     public Mono<Object> registerUser(RegisterRequest request) {
         return userRepository.findByUsername(request.getUsername())
-                .flatMap(existing -> Mono.error(new RuntimeException(USERNAME_EXISTE)))
+                .flatMap(existing -> Mono.error(new AppException(USERNAME_EXISTE)))
                 .switchIfEmpty(
                         userRepository.findByEmail(request.getEmail())
-                                .flatMap(existing -> Mono.error(new RuntimeException(EMAIL_EXISTE)))
+                                .flatMap(existing -> Mono.error(new AppException(EMAIL_EXISTE)))
                 )
                 .switchIfEmpty(
                         Mono.defer(() -> {
@@ -54,10 +56,10 @@ public class UserService {
                     if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                         return Mono.just(user);
                     } else {
-                        return Mono.error(new RuntimeException(LOGIN_PASSWORD_INCORRECTO));
+                        return Mono.error(new AppException(LOGIN_PASSWORD_INCORRECTO));
                     }
                 })
-                .switchIfEmpty(Mono.error(new RuntimeException(LOGIN_USUARIO_NO_ENCONTRADO)));
+                .switchIfEmpty(Mono.error(new AppException(LOGIN_USUARIO_NO_ENCONTRADO)));
     }
 
     public Flux<User> listarUsuarios() {
@@ -66,22 +68,20 @@ public class UserService {
 
     public Mono<User> listarPorId(Long id) {
         return userRepository.findById(id)
-                .switchIfEmpty(Mono.error(new RuntimeException(USERNAME_NO_ENCONTRADO)));
+                .switchIfEmpty(Mono.error(new AppException(USERNAME_NO_ENCONTRADO)));
     }
 
-    public Mono<User> listarPorUsername(String username) {
-        return userRepository.findByUsername(username)
-                .switchIfEmpty(Mono.error(new RuntimeException(USERNAME_NO_ENCONTRADO)));
+    public Mono<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
-
     public Mono<User> listarPorEmail(String email) {
         return userRepository.findByEmail(email)
-                .switchIfEmpty(Mono.error(new RuntimeException(USERNAME_NO_ENCONTRADO)));
+                .switchIfEmpty(Mono.error(new AppException(USERNAME_NO_ENCONTRADO)));
     }
 
     public Mono<User> listarPorTelefono(String telefono) {
         return userRepository.findByTelefono(telefono)
-                .switchIfEmpty(Mono.error(new RuntimeException(USERNAME_NO_ENCONTRADO)));
+                .switchIfEmpty(Mono.error(new AppException(USERNAME_NO_ENCONTRADO)));
     }
 
 }

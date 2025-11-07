@@ -1,24 +1,16 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-
-    <!-- TAILWIND CSS (OBLIGATORIO EN LA PLANTILLA PRINCIPAL) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- FONT AWESOME PARA ICONOS PREMIUM -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
 
-<!-- INCLUIR SIDEBAR PREMIUM -->
 <div th:replace="~{sidebar :: sidebar}"></div>
 
-<!-- CONTENIDO PRINCIPAL (con margen para el sidebar) -->
 <main class="ml-64 p-8">
     <div class="max-w-4xl mx-auto">
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-4">
@@ -28,7 +20,6 @@
             Usuario: <span th:text="${username}" class="font-semibold text-purple-700"></span>
         </p>
 
-        <!-- Tarjetas de resumen (opcional, estilo premium) -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             <div class="bg-white rounded-2xl shadow-lg p-6 border border-purple-100 hover:shadow-xl transition-shadow">
                 <div class="flex items-center justify-between">
@@ -65,6 +56,5 @@
         </div>
     </div>
 </main>
-
 </body>
 </html>

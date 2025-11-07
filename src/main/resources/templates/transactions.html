@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Transacciones</title>
+
+    <!-- TAILWIND CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FONT AWESOME -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Configuración de colores -->
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: '#7c3aed',
+                'primary-dark': '#6d28d9',
+                ingreso: '#10b981',
+                egreso: '#ef4444',
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
+
+<!-- SIDEBAR PREMIUM -->
+<div th:replace="~{sidebar :: sidebar}"></div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="ml-64 p-8">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Título -->
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8 flex items-center justify-center gap-3">
+            <i class="fas fa-list-alt text-primary"></i>
+            Mis Transacciones
+        </h1>
+
+        <!-- FILTRO -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-purple-100">
+            <form method="get" action="/transactions" class="flex flex-col sm:flex-row gap-4 items-center">
+                <label for="filtro" class="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <i class="fas fa-filter text-primary"></i>
+                    Filtrar por:
+                </label>
+                <select name="filtro" id="filtro"
+                        class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                    <option value="TODOS" th:selected="${filtro == 'TODOS'}">Todos</option>
+                    <option value="INGRESO" th:selected="${filtro == 'INGRESO'}">Ingresos</option>
+                    <option value="EGRESO" th:selected="${filtro == 'EGRESO'}">Egresos</option>
+                </select>
+                <button type="submit"
+                        class="px-6 py-2 bg-gradient-to-r from-primary to-purple-700 text-white font-bold rounded-xl hover:from-primary-dark hover:to-purple-800 transform hover:scale-105 transition-all shadow-lg flex items-center gap-2">
+                    <i class="fas fa-search"></i>
+                    Filtrar
+                </button>
+                <a th:href="@{/transactions/nuevo}"
+                   class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transform hover:scale-105 transition-all shadow-lg flex items-center gap-2">
+                    <i class="fas fa-plus"></i>
+                    Nueva
+                </a>
+            </form>
+        </div>
+
+        <!-- TABLA DE TRANSACCIONES -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-purple-100">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gradient-to-r from-primary to-purple-700 text-white">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">
+                            <i class="fas fa-coins mr-2"></i>Monto
+                        </th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">
+                            <i class="fas fa-align-left mr-2"></i>Descripción
+                        </th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">
+                            <i class="fas fa-calendar-alt mr-2"></i>Fecha
+                        </th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">
+                            <i class="fas fa-tags mr-2"></i>Categoría
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                    <tr th:each="t : ${transactions}"
+                        th:class="${categoryMap[t.categoriaId]} == 'INGRESO' ? 'bg-green-50 hover:bg-green-100' : 'bg-red-50 hover:bg-red-100'"
+                        class="transition-all duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                  <span th:text="'S/ ' + ${#numbers.formatDecimal(t.monto, 1, 2)}"
+                        th:class="${categoryMap[t.categoriaId]} == 'INGRESO' ? 'text-ingreso font-bold' : 'text-egreso font-bold'">
+                  </span>
+                        </td>
+                        <td class="px-6 py-4" th:text="${t.descripcion}"></td>
+                        <td class="px-6 py-4 text-sm text-gray-600"
+                            th:text="${#temporals.format(t.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td class="px-6 py-4">
+                  <span th:text="${categoryMap[t.categoriaId]}"
+                        th:class="${categoryMap[t.categoriaId]} == 'INGRESO' ? 'px-3 py-1 bg-green-100 text-ingreso rounded-full text-xs font-semibold' : 'px-3 py-1 bg-red-100 text-egreso rounded-full text-xs font-semibold'">
+                  </span>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- Sin transacciones -->
+                <div th:if="${#lists.isEmpty(transactions)}"
+                     class="text-center py-12 text-gray-500">
+                    <i class="fas fa-inbox text-6xl mb-4 text-gray-300"></i>
+                    <p class="text-lg">No hay transacciones para mostrar</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESUMEN FINANCIERO -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <!-- Ingresos -->
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm opacity-90">Total Ingresos</p>
+                        <p class="text-3xl font-bold"
+                           th:text="'S/ ' + ${#numbers.formatDecimal(totalIngresos, 1, 2)}"></p>
+                        <p class="text-sm mt-1 opacity-80" th:text="${porcentajeIngresos} + '%'"></p>
+                    </div>
+                    <i class="fas fa-arrow-up text-5xl opacity-30"></i>
+                </div>
+            </div>
+
+            <!-- Egresos -->
+            <div class="bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm opacity-90">Total Egresos</p>
+                        <p class="text-3xl font-bold"
+                           th:text="'S/ ' + ${#numbers.formatDecimal(totalEgresos, 1, 2)}"></p>
+                        <p class="text-sm mt-1 opacity-80" th:text="${porcentajeEgresos} + '%'"></p>
+                    </div>
+                    <i class="fas fa-arrow-down text-5xl opacity-30"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badge PRO -->
+        <div class="text-center mt-10">
+        <span class="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs font-bold px-4 py-1 rounded-full shadow-lg animate-pulse">
+          PRO
+        </span>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

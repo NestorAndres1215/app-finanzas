@@ -16,6 +16,4 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    // Dashboard protegido
-
 }
